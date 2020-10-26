@@ -1,0 +1,17 @@
+Problem 1
+---
+Given a list of 2D points, of integer coordinates,
+(1) Sort them by X;
+
+(2) For any (integer) X with no point covering it, make one up using linear interpolation on the existing points. (As in, the nearest existing point to its left and right, draw a straight line between them and use that line to plot points over the uncovered Xes).
+
+(3) Find and record the third-smallest Y value amongst the new list of points.
+
+(4) Assemble the new list of points into a (sorted) binary tree.
+
+(5) Binary search for the recorded third-smallest Y value, recording the nodes you visited along the way (including the root).
+
+This is some really cheesy algorithms problems, but let's see if you can survive what is basically five separate ones in a row.
+
+Implementation language: JavaScript
+%%
