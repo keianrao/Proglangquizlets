@@ -26,17 +26,39 @@ the only JVM they had - and they were well-optimised for applets apparently.
 	<script>
 		const output = document.getElementById("output");
 		
-		function isSortedByX(arrayOfPoints) {
+		output.textContent = "";
+		output.log = function(text) {
+			if (this.textContent.length !== 0)
+				this.textContent += "\n";
 			
+			this.textContent += text;
 		}
 		
-		function continuousOverX(arrayOfPoints) {
+		
+		
+		//  Tests   \\  //  \\  //  \\  //  \\  //  \\  //  \\  //  \\
+		
+		function isSortedByX(arrayOfPoints) {
+			if (arrayOfPoints.length === 0) return true;
+			// Empty lists are sorted.
+			
+			var [{x: previousX}, ...rest] = arrayOfPoints;
+			for (var point of rest) {
+				if (point.x < previousX) return false;
+			}
+			
+			return true;
+			// Didn't return false from above,
+			// so it was ascending all the way.
+		}
+		
+		function isContinuousOverX(arrayOfPoints) {
 		
 		}
 		
 		function isThirdSmallestY(y, arrayOfPoints) {
 			function getSortedUniqueY(arrayOfPoints) {
-			
+				
 			}
 		}
 		
@@ -44,24 +66,79 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		
 		}
 		
-		function traversalIsCorrect(finalNodeValue, path, tree) {
+		function isCorrectTraversal(finalNodeValue, path, tree) {
 		
 		}
+		
+		function testIsSortedByX() {
+			var normalSorted = [
+				{ x: 1, y: 4 },
+				{ x: 2, y: 8 },
+				{ x: 4, y: 20 },
+				{ x: 5, y: 1 }
+			];
+			if (!isSortedByX(normalSorted)) return false;
+			
+			var normalUnsorted = [
+				{ x: 2, y: 10 },
+				{ x: 3, y: 6 },
+				{ x: 1, y: 0 }
+			];
+			if (isSortedByX(normalUnsorted)) return false;
+			
+			if (!isSortedByX([])) return false;
+			
+			return true;
+		}
+		
+		function testIsContinuousOverX() {
+		
+		}
+		
+		function testIsThirdSmallestY() {
+		
+		}
+		
+		function testIsValidBinaryTree() {
+		
+		}
+		
+		function testIsCorrectTraversal() {
+					
+		}
+		
+		function testAllAsserts() {
+			if (!testIsSortedByX()) {
+				output.log("isSortedByX is not functioning correctly!");
+				return false;
+			}
+			
+			return true;
+		}
+		
+		
+		
+		//  Main    \\  //  \\  //  \\  //  \\  //  \\  //  \\  //  \\
 		
 		function perform(points) {
 			
 		}
 		
-		perform([
-			{ x: 10, y: 0 },
-			{ x: 1, y: 20 },
-			{ x: 15, y: 23 },
-			{ x: 4, y: 30 },
-			{ x: 8, y: 16 },
-			{ x: 17, y: 5 },
-			{ x: 3, y: 3 },
-			{ x: 0, y: 4 }
-		]);
+		if (!testAllAsserts()) {
+			output.log("Stopping.");
+		}
+		else {
+			perform([
+				{ x: 10, y: 0 },
+				{ x: 1, y: 20 },
+				{ x: 15, y: 23 },
+				{ x: 4, y: 30 },
+				{ x: 8, y: 16 },
+				{ x: 17, y: 5 },
+				{ x: 3, y: 3 },
+				{ x: 0, y: 4 }
+			]);
+		}
 	</script>
 	
 </html>
