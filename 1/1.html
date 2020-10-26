@@ -38,22 +38,31 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		
 		//  Tests   \\  //  \\  //  \\  //  \\  //  \\  //  \\  //  \\
 		
-		function isSortedByX(arrayOfPoints) {
-			if (arrayOfPoints.length === 0) return true;
-			// Empty lists are sorted.
+		function isInOrder(array, orderTestFunction)
+		{
+			if (array.length === 0) return true;
 			
-			var [{x: previousX}, ...rest] = arrayOfPoints;
-			for (var point of rest) {
-				if (point.x < previousX) return false;
+			var [previous, ...rest] = array;
+			for (var current of rest) {
+				if (!orderTestFunction(previous, current)) return false;
+				previous = current;
 			}
 			
 			return true;
-			// Didn't return false from above,
-			// so it was ascending all the way.
+		}
+		
+		function isSortedByX(arrayOfPoints) {
+			return isInOrder(
+				arrayOfPoints.map((point) => point.x),
+				(previousX, currentX) => previousX < currentX
+			);
 		}
 		
 		function isContinuousOverX(arrayOfPoints) {
-		
+			return isInOrder(
+				arrayOfPoints.map((point) => point.x),
+				(previousX, currentX) => currentX == previousX + 1
+			);
 		}
 		
 		function isThirdSmallestY(y, arrayOfPoints) {
@@ -63,7 +72,7 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		}
 		
 		function isValidBinaryTree(tree) {
-		
+			
 		}
 		
 		function isCorrectTraversal(finalNodeValue, path, tree) {
@@ -77,22 +86,56 @@ the only JVM they had - and they were well-optimised for applets apparently.
 				{ x: 4, y: 20 },
 				{ x: 5, y: 1 }
 			];
-			if (!isSortedByX(normalSorted)) return false;
+			if (!isSortedByX(normalSorted)) {
+				output.log("Failed on 'normal sorted' case!");
+				return false;
+			}
 			
 			var normalUnsorted = [
 				{ x: 2, y: 10 },
 				{ x: 3, y: 6 },
 				{ x: 1, y: 0 }
 			];
-			if (isSortedByX(normalUnsorted)) return false;
+			if (isSortedByX(normalUnsorted)) {
+				output.log("Failed on 'normal unsorted' case!");
+				return false;
+			}
 			
-			if (!isSortedByX([])) return false;
+			if (!isSortedByX([])) {
+				output.log("Failed on 'empty' case!");
+				return false;
+			}
 			
 			return true;
 		}
 		
 		function testIsContinuousOverX() {
-		
+			var normalContinuous = [
+				{ x: 4, y: 5 },
+				{ x: 5, y: 7 },
+				{ x: 6, y: 10 },
+			];
+			if (!isContinuousOverX(normalContinuous)) {
+				output.log("Failed on 'normal continuous' case!");		
+				return false;
+			}
+			
+			var normalDiscontinuous = [
+				{ x: 4, y: 1 },
+				{ x: 5, y: 2 },
+				{ x: 7, y: 3 }
+			];
+			if (isContinuousOverX(normalDiscontinuous)) {
+				output.log("Failed on 'normal discontinuous' case!");
+				return false;
+			}
+			
+			if (!isContinuousOverX([])) {
+				output.log("Failed on 'empty' case!");
+				return false;
+			}
+			
+			return true;
 		}
 		
 		function testIsThirdSmallestY() {
@@ -108,8 +151,16 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		}
 		
 		function testAllAsserts() {
+			// We test the functions that rely on isInOrder,
+			// so we'll treat isInOrder as tested by proxy.
+		
 			if (!testIsSortedByX()) {
 				output.log("isSortedByX is not functioning correctly!");
+				return false;
+			}
+			
+			if (!testIsContinuousOverX()) {
+				output.log("isContinuousOverX is not functioning correctly!");
 				return false;
 			}
 			
