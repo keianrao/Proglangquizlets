@@ -95,8 +95,22 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			return y == sortedUniqueYs[2];
 		}
 		
-		function isValidBinaryTree(tree) {
+		function isValidBinaryTree(root) {
+			// We can represent binary trees as arrays.. but we aren't
+			// using C. We'll take the performance hit.
 			
+			if (root == null) return true;
+			
+			if (root.left != null && root.left.value > root.value)
+				return false;
+							
+			if (root.right != null && root.right.value < root.value)
+				return false;
+				
+			return (
+				isValidBinaryTree(root.left)
+				&& isValidBinaryTree(root.right)
+			);
 		}
 		
 		function isCorrectTraversal(finalNodeValue, path, tree) {
@@ -194,7 +208,111 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		}
 		
 		function testIsValidBinaryTree() {
-		
+			var normalValid = {
+				value: 5,
+				left: {
+					value: 3,
+					left: null,
+					right: {
+						value: 4,
+						left: null,
+						right: null
+					}
+				},
+				right: {
+					value: 8,
+					left: {
+						value: 6,
+						left: null,
+						right: {
+							value: 7,
+							left: null,
+							right: null
+						}
+					},
+					right: {
+						value: 10,
+						left: null,
+						right: null
+					}
+				}
+			};
+			if (!isValidBinaryTree(normalValid)) {
+				output.log("Failed on 'normal valid' case!");		
+				return false;
+			}
+			
+			var normalInvalid = {
+				value: 100,
+				left: {
+					value: 80,
+					left: null,
+					right: null
+				},
+				right: {
+					value: 20,
+					left: null,
+					right: null
+				}
+			}
+			if (isValidBinaryTree(normalInvalid)) {
+				output.log("Failed on 'normal invalid' case!");
+				return false;
+			}
+			
+			var singleNodeValid = {
+				value: 0,
+				left: null,
+				right: null
+			}
+			if (!isValidBinaryTree(singleNodeValid)) {
+				output.log("Failed on 'single node' case!")
+				return false;
+			}
+			
+			var lateInvalid = {
+				value: 10,
+				left: {
+					value: 5,
+					left: {
+						value: 3,
+						left: {
+							value: 1,
+							left: null,
+							right: null
+						},
+						right: {
+							value: 4,
+							left: null,
+							right: null
+						}
+					},
+					right: null
+				},
+				right: {
+					value: 20,
+					left: {
+						value: 16,
+						left: null,
+						right: {
+							value: 18,
+							left: {
+								value: 19,
+								left: null,
+								right: null
+							},
+							right: null
+						}
+					},
+					right: null
+				}
+			}
+			if (isValidBinaryTree(lateInvalid)) {
+				output.log("Failed on 'late invalid' case!");
+				return false;
+			}
+			
+			return true;
 		}
 		
 		function testIsCorrectTraversal() {
@@ -217,6 +335,11 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			
 			if (!testIsThirdSmallestY()) {
 				output.log("isThirdSmallestY is not functioning correctly!");
+				return false;
+			}
+			
+			if (!testIsValidBinaryTree()) {
+				output.log("isValidBinaryTree is not functioning correctly!");
 				return false;
 			}
 			
