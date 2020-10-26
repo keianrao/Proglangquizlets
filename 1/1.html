@@ -66,9 +66,33 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		}
 		
 		function isThirdSmallestY(y, arrayOfPoints) {
-			function getSortedUniqueY(arrayOfPoints) {
+			function getSortedUniqueYs(arrayOfPoints) {
+				function shallowCopyArray(array) {
+					return array.slice();
+				}
+				var sortedYs = 
+					shallowCopyArray(arrayOfPoints)
+						.map((point) => point.y)
+						.sort((previousY, currentY) => previousY > currentY);
+				// Apparently the parser looks forward before
+				// auto-inserting a terminating semicolon.
+
+				// We will manually remove duplicates..
+				var [previousY, ...rest] = sortedYs;
+				var sortedUniqueYs = [previousY];
+				for (var currentY of rest) {
+					if (currentY == previousY) continue;
+					sortedUniqueYs.push(currentY);
+					previousY = currentY;
+				}
 				
+				return sortedUniqueYs;
 			}
+			
+			var sortedUniqueYs = getSortedUniqueYs(arrayOfPoints);
+
+			if (sortedUniqueYs.length < 3) return false;
+			return y == sortedUniqueYs[2];
 		}
 		
 		function isValidBinaryTree(tree) {
@@ -139,7 +163,34 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		}
 		
 		function testIsThirdSmallestY() {
-		
+			var normalCorrect = [
+				{ x: 1, y: 7 },
+				{ x: 2, y: 10 },
+				{ x: 3, y: 20 },
+				{ x: 0, y: 40 }
+			];
+			if (!isThirdSmallestY(20, normalCorrect)) {
+				output.log("Failed on 'normal correct' case!");
+				return false;
+			}
+			
+			var normalIncorrect = [
+				{ x: 4, y: 60 },
+				{ x: 3, y: 60 },
+				{ x: 2, y: 20 },
+				{ x: 1, y: 20 },				
+				{ x: 0, y: 0 },
+			];
+			if (isThirdSmallestY(20, normalIncorrect)) {
+				output.log("Failed on 'normal incorrect' case!");
+				return false;
+			}
+			if (!isThirdSmallestY(60, normalIncorrect)) {
+				output.log("Failed on 'two corrects' case!");
+				return false;
+			}
+			
+			return true;
 		}
 		
 		function testIsValidBinaryTree() {
@@ -161,6 +212,11 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			
 			if (!testIsContinuousOverX()) {
 				output.log("isContinuousOverX is not functioning correctly!");
+				return false;
+			}
+			
+			if (!testIsThirdSmallestY()) {
+				output.log("isThirdSmallestY is not functioning correctly!");
 				return false;
 			}
 			
