@@ -9,7 +9,7 @@ Given a list of 2D points, of integer coordinates,
 
 (4) Assemble the new list of points into a (sorted) binary tree.
 
-(5) Binary search for the recorded third-smallest Y value, recording the nodes you visited along the way (including the root).
+(5) Binary search for the recorded third-smallest Y value, recording the values of the nodes you visited along the way (including the root).
 
 This is some really cheesy algorithms problems, but let's see if you can survive what is basically five separate ones in a row.
 

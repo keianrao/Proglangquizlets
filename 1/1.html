@@ -113,8 +113,37 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			);
 		}
 		
-		function isCorrectTraversal(finalNodeValue, path, tree) {
-		
+		function isCorrectTraversal(finalNodeValue, pathValues, currentNode) {
+			// Interpreting instruction as excluding final node value.
+			if (pathValues.length == 0) {
+				// We should've arrived now.
+				if (currentNode == null) return false;
+				if (currentNode.value != finalNodeValue) return false;
+				return true;
+			}
+			else {
+				// Still have nodes to travel.
+				if (currentNode == null) return false; // Reached end of tree..
+				var [expectedCurrentValue, ...rest] = pathValues;
+				if (currentNode.value != expectedCurrentValue) return false;
+				
+				// Okay, good so far.. We need to head the right way.
+				var expectedNextValue;
+				if (rest.length == 0) expectedNextValue = finalNodeValue;
+				else expectedNextValue = rest[0];
+				
+				var nextNode =
+					expectedNextValue <= currentNode.value
+						? currentNode.left
+						: currentNode.right;
+				// The "next node's value should be same as current node's"
+				// case is rather scary since, both left and right are valid.
+				// In this test I assume we always put it on the left.
+				// But in my isValidBinaryTree code I don't really follow
+				// those assumptions..
+								
+				return isCorrectTraversal(finalNodeValue, rest, nextNode);
+			}
 		}
 		
 		function testIsSortedByX() {
@@ -315,8 +344,128 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			return true;
 		}
 		
-		function testIsCorrectTraversal() {
-					
+		function testIsCorrectTraversal() {		
+			var normalCorrect = {
+				value: 10,
+				left: {
+					value: 2,
+					left: {
+						value: 1,
+						left: null,
+						right: null
+					},
+					right: {
+						value: 4,
+						left: {
+							value: 3,
+							left: null,
+							right: null
+						},
+						right: {
+							value: 6,
+							left: null,
+							right: null
+						}
+					}
+				},
+				right: {
+					value: 20,
+					left: null,
+					right: null
+				}
+			}
+			if (!isCorrectTraversal(
+				6,
+				[10, 2, 4],
+				normalCorrect
+			)) {
+				output.log("Failed on 'normal correct 6' case!");
+				return false;
+			}
+			if (!isCorrectTraversal(
+				20,
+				[10],
+				normalCorrect
+			)) {
+				output.log("Failed on 'normal correct 20' case!");
+				return false;
+			}
+		
+			var straightLeftCorrect = {
+				value: 1000,
+				left: {
+					value: 500,
+					left: {
+						value: 250,
+						left: {
+							value: 125,
+							left: null,
+							right: null
+						},
+						right: null
+					},
+					right: null
+				},
+				right: null
+			};
+			if (!isCorrectTraversal(
+				125,
+				[1000, 500, 250],
+				straightLeftCorrect
+			)) {
+				output.log("Failed on 'straight left' case!");
+				return false;
+			}
+			
+			var normalIncorrect = {
+				value: 10,
+				left: {
+					value: 5,
+					left: {
+						value: 3,
+						left: null,
+						right: {
+							value: 4,
+							left: null,
+							right: null
+						}
+					},
+					right: {
+						value: 8,
+						left: null,
+						right: null
+					}
+				},
+				right: null
+			};
+			if (isCorrectTraversal(
+				8,
+				[10, 5, 3],
+				normalIncorrect
+			)) {
+				output.log("Failed on 'normal incorrect' case!");
+				return false;
+			}
+			
+			var omittedRootIncorrect = {
+				value: 20,
+				left: {
+					value: 10,
+					left: null,
+					right: {
+						value: 15,
+						left: null,
+						right: null
+					}
+				},
+				right: null
+			}
+			if (isCorrectTraversal(15, [10], omittedRootIncorrect)) {
+				output.log("Failed on 'omitted root' case!");
+				return false;
+			}
+			
+			return true;
 		}
 		
 		function testAllAsserts() {
@@ -340,6 +489,11 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			
 			if (!testIsValidBinaryTree()) {
 				output.log("isValidBinaryTree is not functioning correctly!");
+				return false;
+			}
+			
+			if (!testIsCorrectTraversal()) {
+				output.log("isCorrectTraversal is not functioning correctly!");
 				return false;
 			}
 			
