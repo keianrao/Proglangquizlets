@@ -14,4 +14,52 @@ Given a list of 2D points, of integer coordinates,
 This is some really cheesy algorithms problems, but let's see if you can survive what is basically five separate ones in a row.
 
 Implementation language: JavaScript
+
+%%
+
+Problem 2
+---
+(1) Store hierarchical data in the form of nested dictionaries. For example, for every mapping in a given dictionary, might be an atomic value, or another dictionary.
+
+(2) Print every atomic value in the dictionary to standard output, as its own line of the form 'K = V' - where K is the (corresponding) key's name, preceded by the key names of the nested dictionaries it is in, separated by periods.
+
+This is better explained with an example. Suppose a top-level dictionary has two mappings: 'first' to '5'; and 'second' to another dictionary, which contains one mapping 'a' to 'A'.
+
+    {
+        first: 5
+        second: {
+            a: A
+        }
+    }
+
+Then, to print this dictionary as per the question.
+
+    first = 5
+    second.a = A
+
+There was no entry for 'second' as a key since it didn't map to an atomic value, but the atomic value inside it was printed prefixed by 'second.', since 'second' is the key name of a nested dictionary it was in, so we wrote that and a separating period. Here are some more examples:
+
+    third = 10
+    fourth.first = 10
+    fourth.second.first = 10
+
+    value = 2
+    left.value = 1
+    right.value = 3
+
+    fruits.tropical.green = durian
+
+Hopefully this terrible, long-winded explanation gives the idea.
+
+Anyhow. So, nested dictionary. Print each atomic value as a 'K = V' line, where if it's nested then prefix the K appropriately.
+
+
+(3) Repeat (1), but this time in the form of some sort of object with a custom type/class.
+
+(4) Print the object in (3), overriding its string representation such that it matches what (2) does.
+
+For this step to make sense, the print function you are using needs to somehow let you provide the string representation for the object. For example, in OO languages, usually the print function calls some public method of the object that you can override.
+
+Implementation language: Python
+
 %%
