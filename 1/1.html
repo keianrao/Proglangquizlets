@@ -73,7 +73,7 @@ the only JVM they had - and they were well-optimised for applets apparently.
 				var sortedYs = 
 					shallowCopyArray(arrayOfPoints)
 						.map((point) => point.y)
-						.sort((previousY, currentY) => previousY > currentY);
+						.sort((currentY, previousY) => previousY < currentY);
 				// Apparently the parser looks forward before
 				// auto-inserting a terminating semicolon.
 
@@ -81,8 +81,9 @@ the only JVM they had - and they were well-optimised for applets apparently.
 				var [previousY, ...rest] = sortedYs;
 				var sortedUniqueYs = [previousY];
 				for (var currentY of rest) {
-					if (currentY == previousY) continue;
-					sortedUniqueYs.push(currentY);
+					if (currentY != previousY) {
+						sortedUniqueYs.push(currentY);
+					}
 					previousY = currentY;
 				}
 				
@@ -505,7 +506,139 @@ the only JVM they had - and they were well-optimised for applets apparently.
 		//  Main    \\  //  \\  //  \\  //  \\  //  \\  //  \\  //  \\
 		
 		function perform(points) {
+			// Given that one of the instructions is "find the
+			// third-smallest Y value", we'll assume the argument
+			// has at least 3 points.
+		
+			// Sorting is easy, with a standard library.
+			// Unlike in the tests, we want to leave them as points.
+			points.sort((b, a) => a.x < b.x);
+			if(!isSortedByX(points)) {
+				output.log("Messed up step (1). Stopping.");
+				return;
+			}
 			
+			// Okay. We will... iterate through every pair of points.
+			// Determine how many Xs in between need to get a point.
+			// Prepare a line equation between the pair of points.
+			// Use the equation to make those points.
+			
+			function rangeBetween(first, second) {
+				var difference = second - first;
+				var numbersBetween = Math.abs(difference) - 1;
+				var step = Math.sign(difference);
+				
+				var returnee = Array.from(
+					{ length: numbersBetween },
+					function (value, offset) {
+						// So. About 'step'. If second > first, then
+						// If second > first, then we move upwards
+						// 1 at every offset. But if first > second,
+						// then we move downwards 1 at every offset.
+						return first + ((offset + 1) * step);
+						
+						// We don't actually have to support first > second
+						// for the problem we're writing all this for. We're
+						// getting the Xs between two points, and we had
+						// already sorted the points ascendingly by X earlier.
+						// But, I guess it's good form for this function to
+						// actually do what it says (at least for integers).
+					}
+				);
+				
+				return returnee;
+			}
+			
+			function roundToNumberOfDecimalPlaces(number, decimalPlaces) {
+				var scale = Math.pow(10, decimalPlaces);
+				
+				// First convert to that decimal places' scale.
+				// Fractions are now of decimal places we'd like to discard.
+				var downscaledNumber = Math.round(number * scale);
+				
+				// Now upscale it back, and return.
+				return downscaledNumber / scale;
+				
+				// Thanks internet. You didn't help..
+				// Someone should test which is faster, messing with
+				// large integers like this or doing 
+				// Number.prototype.toFixed and re-evaluating the string.
+			}
+			
+			// Helper functions for following loop. Normally I'd
+			// put them in the loop iteration, but I won't risk the
+			// possibility that it'd re-interpret and re-declare
+			// the functions at every iteration..
+			
+			// I'll do what I did in the test, the [prev, ..rest] thing.
+			var [leftPoint, ...rest] = points;
+			var interpolatedPoints = [leftPoint];
+			for (var rightPoint of rest) {			
+				var xsToMakePointsFor = rangeBetween(leftPoint.x, rightPoint.x);
+				if (xsToMakePointsFor.length == 0) {
+					interpolatedPoints.push(rightPoint);
+					leftPoint = rightPoint;
+					continue;
+				}
+				
+				// Okay, we have points to interpolate for.
+				// Get the linear equation values..
+				var dx = rightPoint.x - leftPoint.x;
+				var dy = rightPoint.y - leftPoint.y;
+				var slope = dy / dx;				
+				var yIntercept = leftPoint.y - (slope * leftPoint.x);
+				
+				// Now generate points and push them in.
+				for (var xToMakePointFor of xsToMakePointsFor) {
+					let y = 
+						roundToNumberOfDecimalPlaces(
+							yIntercept + (slope * xToMakePointFor),
+							2
+						);
+					
+					interpolatedPoints.push({ x: xToMakePointFor, y: y });
+				}
+				
+				// Okay, all pushed in. Now push the right point.
+				interpolatedPoints.push(rightPoint);				
+				
+				// Transitioning to next iteration. This iteration's
+				// right point becomes the next's left point.
+				leftPoint = rightPoint;
+			}
+			
+			if (!isContinuousOverX(interpolatedPoints)) {
+				output.log("Messed up step (2). Stopping.");
+				return;
+			}
+			
+			// Okay, we have to get the third-smallest Y value.
+			var yValues = interpolatedPoints.map((point) => point.y);			
+			// Wisest probably really is to just sort | uniq | head | tail.
+			
+			yValues.sort((b, a) => a < b);
+			
+			// This time we'll follow a StackOverflow answer.
+			// You find the offset of the first occurence for every certain Y.
+			var firstOffsetForY = { }
+			for (var yValue of yValues) {
+				if (!firstOffsetForY[yValue]) {
+					firstOffsetForY[yValue] = yValues.indexOf(yValue);
+				}
+			}
+			// Now throw out any offset where it's not 
+			// the first occurence for that Y.
+			yValues =
+				yValues.filter((y, offset) => offset == firstOffsetForY[y]);
+			
+			var thirdSmallestY = yValues[2];
+			if (!isThirdSmallestY(thirdSmallestY, interpolatedPoints)) {
+				output.log("Messed up step (3). Stopping.");
+				return;
+			}
+			
+			
+			// Coming up: binary tree time.
 		}
 		
 		if (!testAllAsserts()) {
