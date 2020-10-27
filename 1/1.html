@@ -637,7 +637,7 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			var uniqueYValues =
 				yValues.filter((y, offset) => offset == firstOffsetForY[y]);
 			
-			var thirdSmallestY = yValues[2];
+			var thirdSmallestY = uniqueYValues[2];
 			if (!isThirdSmallestY(thirdSmallestY, interpolatedPoints)) {
 				output.log("Messed up step (3). Stopping.");
 				return;
