@@ -534,9 +534,9 @@ the only JVM they had - and they were well-optimised for applets apparently.
 					{ length: numbersBetween },
 					function (value, offset) {
 						// So. About 'step'. If second > first, then
-						// If second > first, then we move upwards
-						// 1 at every offset. But if first > second,
-						// then we move downwards 1 at every offset.
+						// we move upwards 1 at every offset. 
+						// But if first > second, then we 
+						// move downwards 1 at every offset.
 						return first + ((offset + 1) * step);
 						
 						// We don't actually have to support first > second
@@ -696,7 +696,7 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			while (currentNode != null) {
 				if (currentNode.value == thirdSmallestY) break;
 				// The only proof they ask for is visitedNodes,
-				// we don't have to pass the check the node.
+				// we don't have to pass the found node.
 				
 				// Otherwise, not here..
 				visitedNodes.push(currentNode);
