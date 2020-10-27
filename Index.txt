@@ -7,7 +7,7 @@ Given a list of 2D points, of integer coordinates,
 
 (3) Find and record the third-smallest Y value amongst the new list of points.
 
-(4) Assemble the new list of points into a (sorted) binary tree.
+(4) Assemble the new list of points into a (sorted) binary tree with the points' Y's as values.
 
 (5) Binary search for the recorded third-smallest Y value, recording the values of the nodes you visited along the way (including the root).
 

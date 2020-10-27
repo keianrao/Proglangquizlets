@@ -509,7 +509,6 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			// Given that one of the instructions is "find the
 			// third-smallest Y value", we'll assume the argument
 			// has at least 3 points.
-		
 			// Sorting is easy, with a standard library.
 			// Unlike in the tests, we want to leave them as points.
 			points.sort((b, a) => a.x < b.x);
@@ -517,6 +516,9 @@ the only JVM they had - and they were well-optimised for applets apparently.
 				output.log("Messed up step (1). Stopping.");
 				return;
 			}
+			output.log("Sorted the points by X.");
+			console.log("(1) After:");
+			console.log(points);
 			
 			// Okay. We will... iterate through every pair of points.
 			// Determine how many Xs in between need to get a point.
@@ -610,7 +612,11 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			if (!isContinuousOverX(interpolatedPoints)) {
 				output.log("Messed up step (2). Stopping.");
 				return;
-			}
+			}			
+			output.log("Interpolated for X's without points.");
+			console.log("(2) After:")
+			console.log(interpolatedPoints);
+			
 			
 			// Okay, we have to get the third-smallest Y value.
 			var yValues = interpolatedPoints.map((point) => point.y);			
@@ -628,17 +634,92 @@ the only JVM they had - and they were well-optimised for applets apparently.
 			}
 			// Now throw out any offset where it's not 
 			// the first occurence for that Y.
-			yValues =
+			var uniqueYValues =
 				yValues.filter((y, offset) => offset == firstOffsetForY[y]);
 			
 			var thirdSmallestY = yValues[2];
 			if (!isThirdSmallestY(thirdSmallestY, interpolatedPoints)) {
 				output.log("Messed up step (3). Stopping.");
 				return;
+			}			
+			output.log("Found third smallest Y.");
+			console.log("(3) Third smallest Y:");
+			console.log(thirdSmallestY);
+			
+			
+			// Right, so, binary trees. Values are the points' Y's.
+			// We already have a sorted un-uniqued list of them, 'yValues'.		
+			function medianBinaryTree(sortedArray) {
+				if (sortedArray.length == 1) {
+					return {
+						value: sortedArray[0],
+						left: null,
+						right: null
+					};
+				}
+				if (sortedArray.length == 0) return null;
+			
+				var medianOffset = Math.floor(sortedArray.length / 2);
+				// Be careful, this is not C or Java. Explicitly
+				// tell the interpreter you want integer math..
+				var median = sortedArray[medianOffset];
+				var lowerHalf = sortedArray.slice(0, medianOffset);
+				var higherHalf = sortedArray.slice(medianOffset + 1);
+				
+				return {
+					value: median,
+					left: medianBinaryTree(lowerHalf),
+					right: medianBinaryTree(higherHalf)
+				};
+				// Yes. So we start this off on interpolatedPoints first.
+				// But we can also use it to assemble the subtrees for
+				// the lower and higher halves. This strategy should
+				// give us the closest to a complete binary tree.
+				// As opposed to a funny but legal strategy like having a
+				// straight chain of descending/ascending numbers
+				// from the root.
 			}
+			var binaryTree = medianBinaryTree(yValues);
+			if (!isValidBinaryTree(binaryTree)) {
+				output.log("Messed up step (4). Stopping.");
+				return;
+			}
+			output.log("Assembled binary tree.");
+			console.log("(4) Binary tree:");
+			console.log(binaryTree);
 			
 			
-			// Coming up: binary tree time.
+			// Alright, apparently it's valid, let's see if we can
+			// binary search it just fine..
+			var visitedNodes = [];			
+			var currentNode = binaryTree;
+			while (currentNode != null) {
+				if (currentNode.value == thirdSmallestY) break;
+				// The only proof they ask for is visitedNodes,
+				// we don't have to pass the check the node.
+				
+				// Otherwise, not here..
+				visitedNodes.push(currentNode);
+				if (thirdSmallestY <= currentNode.value)
+					currentNode = currentNode.left;
+				else
+					currentNode = currentNode.right;
+			}
+			var pathValues = visitedNodes.map((node) => node.value);
+			
+			if (!isCorrectTraversal(thirdSmallestY, pathValues, binaryTree)) {
+				output.log("Messed up step (5). Stopping.");
+				return;
+			}
+			output.log("Found third smallest Y through binary search.");	
+			console.log("(5) Path values:");
+			console.log(pathValues);
+			
+			
+			output.log(
+				"\nUnless we did something wrong.. that's challenge complete!"
+			);
+			output.log("See JavaScript console for objects.");
 		}
 		
 		if (!testAllAsserts()) {
