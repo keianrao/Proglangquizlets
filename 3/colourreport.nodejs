@@ -1,0 +1,32 @@
+#!/usr/bin/env nodejs
+
+const { execSync } = require('child_process');
+
+var bufferOutput = execSync('./report.sh', options = {
+    env: {
+        "NAME_1": "State",
+        "WIDTH_1": 16,
+        "NAME_2": "Population",
+        "WIDTH_2": 12,
+        "NAME_3": "Area (km^2)",
+        "WIDTH_3": 12
+    },
+    input:
+        "Johor:~3.77M:~19200\n" +
+        "Kedah:~2.19M:~9500\n" +
+        "Kelantan:~1.89M:~15100\n" +
+        "Malacca:~930K:~1700\n" +
+        "Negeri Sembilan:~1.132:~6700\n" +
+        "Pahang:~1.68M:~36100\n" +
+        "Penang:~1.78M:~1000\n" +
+        "Perak:~2.51M:~21000\n" +
+        "Perlis:~250K:~821\n" +
+        "Sabah:~3.90M:~73600\n" +
+        "Sarawak:~2.82M:~124500\n" +
+        "Selangor:~6.54M:~9500\n" +
+        "Terengganu:~1.25M:~13000\n"
+});
+
+var stringOutput = bufferOutput.toString();
+
+var [titleLine, ...dataLines] = stringOutput.split('\n');

@@ -112,9 +112,9 @@ Moreover. There will actually be an automatic first column (call it the 0th colu
 Regarding the column widths. If the column name / field value are too long to fit in the column, they should be clipped such that there is a double-period '..' at the end.
 
 
-(2) Write a program that spawns an invocation of this script, with a custom environment (i.e. values passed in through environment variables).
+(2) Write a program that spawns an invocation of this script, with a custom environment (i.e. values passed in through environment variables), then feeds some sample data into it.
 
-Then, the program will read the script's output, adding some ANSI escape codes before forwarding to standard output again: first, every column name will be underlined (note: not the whitespace!); second, the line numbers will be coloured differently, probably gray (note: not the column values!).
+Next, the program will read the script's output, adding some ANSI escape codes before forwarding to standard output again: first, every column name will be underlined (note: not the whitespace!); second, the line numbers will be coloured differently, probably gray (note: not the column values!).
 
 
 
