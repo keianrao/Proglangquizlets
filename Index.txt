@@ -91,7 +91,15 @@ So, the first line of output are column names like so. Then the script will star
     Accountant          26
     Farmer              33
 
-which comes from data 'student:15\nstudent:16\nprofessor:41\nstudent:20\naccountant:26\nfarmer:33\n'.
+which comes from data 'Student:15\nStudent:16\nProfessor:41\nStudent:20\nccountant:26\nFarmer:33\n'.
+
+Student:15
+Student:16
+Professor:41
+Student:20
+Accountant:26
+Farmer:33
+
 
 Moreover. There will actually be an automatic first column (call it the 0th column if you'd like), of length.. 4. Containing the line number for each line.
 
