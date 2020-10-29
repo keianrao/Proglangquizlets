@@ -26,7 +26,33 @@ var bufferOutput = execSync('./report.sh', options = {
         "Selangor:~6.54M:~9500\n" +
         "Terengganu:~1.25M:~13000\n"
 });
-
 var stringOutput = bufferOutput.toString();
-
 var [titleLine, ...dataLines] = stringOutput.split('\n');
+
+// We'll prepend every length of spaces with a resetter, and append with
+// an underliner. If there are no spaces between two columns, then the
+// whole thing will end up underlined which is correct behaviour anyways.
+const resetter = "\u001B[0m";
+const underliner = "\u001B[4m";
+titleLine =
+    underliner // Start of line
+    + titleLine.replace(/ +/g, resetter + "$&" + underliner)
+    + resetter; // End of line
+console.log(titleLine);
+
+for (var dataLine of dataLines)
+{
+    // We can do something similar to the above. We capture the number lines
+    // column in a regex, then prepend a colour code, append a resetter.
+    // But it's unwise to ignore the case where there's no spaces to
+    // the next column, as we don't want the first column's values to be
+    // greyed out too. There is nothing we can do regex-wise, we have to use
+    // knowledge about how big what we're capturing should be. Above, we
+    // could've recorded the length of the number line column - but we know
+    // it has to be 4, so we're just going to use /^..../.
+    const grey = "\u001B[90m";
+    dataLine = dataLine.replace(/^..../, grey + "$&" + resetter);
+    // This may have a very faint effect - but it is working.
+    // The problem should give us something more obvious..
+    console.log(dataLine);
+}
