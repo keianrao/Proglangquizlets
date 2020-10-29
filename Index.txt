@@ -63,3 +63,57 @@ For this step to make sense, the print function you are using needs to somehow l
 Implementation language: Python
 
 %%
+
+Problem 3
+---
+
+(1) Write a shell script matching the following:
+
+It will prepare up to 4 columns; for each column, it accepts a column name and column width, through environment variables. If no values are passed, then the script by default should use 2 columns of some generic column names and appropriate width (e.g. 'Course', 'Grade').
+
+The script is going to have output, based on the column widths - like a report generator. Consider column H length 8, column J length 16, and column K length 1:
+
+    H       J               K
+    |---|---|---|---|---|---|
+    0       8       16      24
+
+(ruler not actually in output, we're just highlighting the locations and widths) The first line of output are column names. They'll be left-justified according to their column. Consider for 'Brand', 'Tea in stock' and 'Rating':
+
+    Brand   Tea in stock    Rating
+
+So, the first line of output are column names like so. Then the script will start accepting DSV data from standard input - the colon ':' will be the field separator. For each DSV line, the corresponding fields are matched to the columns, left-justified like the column names. Consider for 'Occupation', 'Age':
+
+    Occupation          Age
+    Student             15
+    Student             16
+    Professor           41
+    Student             20
+    Accountant          26
+    Farmer              33
+
+which comes from data 'student:15\nstudent:16\nprofessor:41\nstudent:20\naccountant:26\nfarmer:33\n'.
+
+Moreover. There will actually be an automatic first column (call it the 0th column if you'd like), of length.. 4. Containing the line number for each line.
+
+    #   Occupation          Age
+    1   Student             15
+    2   Student             16
+    ...
+    20  Printer salesperson 25
+
+Regarding the column widths. If the column name / field value are too long to fit in the column, they should be clipped such that there is a double-period '..' at the end.
+
+
+(2) Write a program that spawns an invocation of this script, with a custom environment (i.e. values passed in through environment variables).
+
+Then, the program will read the script's output, adding some ANSI escape codes before forwarding to standard output again: first, every column name will be underlined (note: not the whitespace!); second, the line numbers will be coloured differently, probably gray (note: not the column values!).
+
+
+
+The script and the program do not have to be very robust, but they should not brick over easily encountered situations (e.g. no values given for environment variables, no lines of input). The idea here is to use APIs to do a bit of text processing.
+
+
+Implementation language: sh+coreutils/awk? Node.js?
+
+
+%%
