@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+    <meta charset="utf-8">
+
+    <canvas id="output" width=400 height=300>
+        This is a JavaScript app for
+        a HTML browser that supports the Canvas API.
+    </canvas>
+
+    <script>
+        const output = document.getElementById("output");
+        const g2d = output.getContext('2d');
+
+        function inclusiveRange(start, end, step = 1) {
+            step = Math.abs(step);
+            var returnee = [];
+            if (start <= end) while (start <= end) {
+                returnee.push(start);
+                start += step;
+            }
+            else while (start >= end) {
+                returnee.push(start);
+                start -= step;
+            }
+            return returnee;
+        }
+
+        function renderEllipse(xRadius, yRadius = xRadius) {
+            const xOffset = output.width / 2;
+            const yOffset = output.height / 2;
+
+            const [start, end, step] = [0, 2 * Math.PI, Math.PI / 180];
+            for (var angle of inclusiveRange(start, end, step)) {
+                var x = Math.cos(angle) * xRadius;
+                var y = Math.sin(angle) * yRadius;
+                g2d.fillRect(x + xOffset, y + yOffset, 1, 1);
+                // This is the basic raster-based method. Alternatively,
+                // you can beginPath, moveTo for angle == 0, then lineTo
+                // for each successive angle, before stroke.
+            }
+        }
+
+        g2d.fillStyle = "grey";
+        renderEllipse(80);
+        g2d.fillStyle = "green";
+        renderEllipse(160, 120);
+    </script>
+
+    <style>
+        html { height: 100%; }
+        body {
+            height: 100%;
+            margin: 0;
+            display: grid;
+        }
+        #output {
+            width: 100vmin;
+            height: 75vmin;
+            margin: auto;
+            border: 4px ridge black;
+        }
+    </style>
+
+</html>

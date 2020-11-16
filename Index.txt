@@ -93,14 +93,6 @@ So, the first line of output are column names like so. Then the script will star
 
 which comes from data 'Student:15\nStudent:16\nProfessor:41\nStudent:20\nccountant:26\nFarmer:33\n'.
 
-Student:15
-Student:16
-Professor:41
-Student:20
-Accountant:26
-Farmer:33
-
-
 Moreover. There will actually be an automatic first column (call it the 0th column if you'd like), of length.. 4. Containing the line number for each line.
 
     #   Occupation          Age
@@ -121,7 +113,21 @@ Next, the program will read the script's output, adding some ANSI escape codes b
 The script and the program do not have to be very robust, but they should not brick over easily encountered situations (e.g. no values given for environment variables, no lines of input). The idea here is to use APIs to do a bit of text processing.
 
 
-Implementation language: sh+coreutils/awk? Node.js?
-
+Implementation language: sh; Node.js
 
 %%
+
+Problem 4
+---
+
+(1) To start with, measure and print the runtime of some arbitrary trivial functionality.
+
+(2) Create some simple key-value pairs for test data. Store them (in a variable, etc.).
+
+(3) Create a hash dictionary and an associative array. (If your standard library lacks a hash dictionary, create one based on a growing array/list, and use a basic hash function specialised for the test keys.)
+
+(4) Progressively, remove a pair from the test data and add it into both data structures. Then look it up again in both of them, measuring and printing the runtime for each.
+
+(5) Stop when the associative array is slower than the hash map, and print the number of pairs added so far.
+
+Implementation language: Python
