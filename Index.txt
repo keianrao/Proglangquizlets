@@ -124,7 +124,7 @@ Problem 4
 
 (2) Create some simple key-value pairs for test data. Store them (in a variable, etc.).
 
-(3) Create a hash dictionary and an associative array. (If your standard library lacks a hash dictionary, create one based on a growing array/list, and use a basic hash function specialised for the test keys.)
+(3) Create a hash dictionary and an associative array/list. (If your standard library lacks a hash dictionary, create one based on a growing array/list, and use a basic hash function specialised for the test keys.)
 
 (4) Progressively, remove a pair from the test data and add it into both data structures. Then look it up again in both of them, measuring and printing the runtime for each.
 
