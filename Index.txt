@@ -131,3 +131,6 @@ Problem 4
 (5) Stop when the associative array is slower than the hash map, and print the number of pairs added so far.
 
 Implementation language: Python
+
+%%
+
