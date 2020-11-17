@@ -134,3 +134,17 @@ Implementation language: Python
 
 %%
 
+Problem 5
+---
+
+(1) Create a command interpreter on standard input (or some equivalent), that accepts statements like so: "<username> pass <password>" - where "<username>" and "<password>" can be arbitrary non-empty strings.
+
+(2) Create some usernames and passwords for test data. Then store these as accounts, except, don't store the plaintext passwords as plaintext. Instead, first concatenate the username and password (with username first) (no salt), then SHA256 encode the concatenation, then store the hex representation of the SHA256 encoded.
+
+(3) Now establish user sessions. Create a login method/function that accepts a username and a plaintext password, looks up the account of that username, does to the password the transformation in (2), then compares. If there is a match, then log them in, so create a user session.
+
+(4) Have the command interpreter now also accept statements like so: "<username> set <key> <value>", and "<username> get <key>" - where <key> and <value> are arbitrary non-empty strings with no whitespaces. The former should save the key-value pair in the account, the latter should get and print the value for that key from the account.
+
+In either case, perform the command only on accounts that are logged in. If the account is not logged in, refuse and inform the user that they should login and how. (You can also handle non-existent accounts to save the worry of typing mistakes, but you don't have to for this problem.)
+
+(5) Write some test code that simulates concurrent use. Multiple users will log in at different times. They will use similar keys, and try to get values - it should always save into the correct account and retrieve from the correct account. Some commands will be entered for users that aren't logged in.
