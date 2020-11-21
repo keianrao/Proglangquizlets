@@ -175,3 +175,5 @@ Problem 6
 (10) The sorting function should also support grouping, where listings of the same group are consecutive. For a given field to group by, listings are of the same group if they have the same value in that field. For example, if listings are sorted by ascending price per item but grouped by item name, then every item name's listings are shown consecutively, with the consecutive listings then sorted by ascending price.
 
 Basically, this is basically an additional sort on top. If the sorting function from earlier does a stable sort, then this is not terribly difficult to implement. Otherwise, listings can be organised into groups first, then each group sorted. If need be, this may be implemented in the frontend instead.
+
+Implementation language: JavaScript
